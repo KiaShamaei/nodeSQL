@@ -40,6 +40,15 @@ app.get('/employees/:id' , (req,res)=>{
 		console.log(err)
 	})
 })
+// delete on employee post and delete must happen in postman
+app.delete ("/employees/:id" , (req,res)=>{
+	mysqlConnection.query("DELETE FROM EMPLOYEE WHERE EMPID = ?" , [req.params.id] , (err, rows , field) =>{
+		if(!err)
+		res.send("A employee is deleted !")
+		else 
+		console.log(err)
+	})
+})
 
 
 app.listen(3000, ()=>{console.log("express server is runnig successfully!")})
