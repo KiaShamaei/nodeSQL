@@ -11,7 +11,8 @@ const mysqlConnection = mysql.createConnection({
 	host : "localhost",
 	database : "employeedb",
 	user : "root",
-	password : "KM@852147154"
+	password : "KM@852147154", 
+	multipleStatements : true
 })
 mysqlConnection.connect((err)=>{
 	if(!err)
@@ -47,6 +48,39 @@ app.delete ("/employees/:id" , (req,res)=>{
 		res.send("A employee is deleted !")
 		else 
 		console.log(err)
+	})
+})
+//add and edit for this best is add procidure to sql
+app.post("/employees" , (req,res)=>{
+	const emp = req.body;
+	const sql = "SET @EMPID = ? ; SET @NAME = ? ; SET @EmpCode = ? ; SET @Salary = ? ; \
+	CALL EmployeeAddOrEdit(@EMPID,@NAME,@EmpCode,@Salary);"
+	mysqlConnection.query(sql , [emp.EMPID ,emp.NAME , emp.EmpCode , emp.Salary] , (err , rows , field)=>{
+		if(!err){
+			// console.log(rows)
+			// rows.forEach(element => {
+			// 	if(element.constructor == Array)
+			// 	res.send("add employee success ID : " + element[0].EmpID)
+			// });
+			res.send("success")
+		
+		}else{
+			console.log(err)
+		}
+
+	})
+})
+app.put("/employees" , (req,res)=>{
+	const emp = req.body;
+	const sql = "SET @EmpID = ? ; SET @NAME = ? ; SET @EmpCode = ? ; SET @Salary = ? ; \
+	CALL EmployeeAddOrEdit(@EmpID,@NAME,@EmpCode,@Salary);"
+	mysqlConnection.query(sql , [emp.EmpID,emp.NAME,emp.EmpCode,emp.Salary] , (err , rows , field)=>{
+		if(!err){
+			res.send("update successfully")		
+		}else{
+			console.log(err)
+		}
+
 	})
 })
 
